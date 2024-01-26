@@ -4,7 +4,7 @@
 module.exports = {
   '/01.运维/': [
     {
-      title: 'JavaScript',
+      title: 'Operation',
       collapsable: false, //是否可折叠，可选的，默认true
       children: [
         ['01.JavaScript/01.JavaScript中的名词概念','JavaScript中的名词概念'],
@@ -18,7 +18,7 @@ module.exports = {
   ],
   '/02.开发/': [
     {
-      title: 'html-css',
+      title: 'Developer',
       collapsable: false,
       children: [
         ['01.html-css/00.flex布局语法','flex布局语法'],

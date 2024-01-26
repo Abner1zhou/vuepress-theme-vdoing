@@ -18,7 +18,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
   locales: {
     '/': {
       lang: 'zh-CN',
-      title: "Zhou's blog",
+      title: "山猪的博客",
       description: '技术文章分享',
     }
   },
@@ -35,13 +35,13 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
         items: [
           // 说明：以下所有link的值只是在相应md文件头部定义的永久链接（不是什么特殊编码）。另外，注意结尾是有斜杠的
           {
-            text: '前端文章',
+            text: '操作系统',
             items: [
               { text: 'JavaScript', link: '/pages/8143cc480faf9a11/' },
             ],
           },
           {
-            text: '学习笔记',
+            text: '数据库',
             items: [
               { text: '《JavaScript教程》', link: '/note/javascript/' },
               { text: '《JavaScript高级程序设计》', link: '/note/js/' },
@@ -66,14 +66,16 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
               },
             ],
           },
+          { text: '其他运维笔记', link: '/pages/8309a5b876fc95e3/' },
         ],
       },
       {
         text: '开发',
         link: '/developer/',
         items: [
-          { text: 'HTML', link: '/pages/8309a5b876fc95e3/' },
-          { text: 'CSS', link: '/pages/0a83b083bdf257cb/' },
+          { text: 'Python', link: '/pages/8309a5b876fc95e3/' },
+          { text: 'Java', link: '/pages/0a83b083bdf257cb/' },
+          { text: '其他开发笔记', link: '/pages/8309a5b876fc95e3/' },
         ],
       },
       {
@@ -82,7 +84,6 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
         items: [
           { text: '技术文档', link: '/pages/9a7ee40fc232253e/' },
           { text: 'GitHub技巧', link: '/pages/4c778760be26d8b3/' },
-          { text: 'Nodejs', link: '/pages/117708e0af7f0bd9/' },
           { text: '博客搭建', link: '/pages/41f87d890d0a02af/' },
         ],
       },
@@ -97,15 +98,15 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
           { text: '友情链接', link: '/friends/' },
         ],
       },
-      { text: '关于', link: '/about/' },
+      // { text: '关于', link: '/about/' },
       {
         text: '收藏',
         link: '/pages/beb6c0bd8a66cea6/',
-        // items: [
-        //   { text: '网站', link: '/pages/beb6c0bd8a66cea6/' },
-        //   { text: '资源', link: '/pages/eee83a9211a70f9d/' },
-        //   { text: 'Vue资源', link: '/pages/12df8ace52d493f6/' },
-        // ],
+        items: [
+          { text: '网站', link: '/pages/beb6c0bd8a66cea6/' },
+          { text: '资源', link: '/pages/eee83a9211a70f9d/' },
+          { text: 'Vue资源', link: '/pages/12df8ace52d493f6/' },
+        ],
       },
       {
         text: '索引',
@@ -119,7 +120,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
     ],
     sidebarDepth: 2, // 侧边栏显示深度，默认1，最大2（显示到h3标题）
     logo: '/img/logo.png', // 导航栏logo
-    repo: 'xugaoyi/vuepress-theme-vdoing', // 导航栏右侧生成Github链接
+    repo: 'Abner1zhou/vuepress-theme-vdoing', // 导航栏右侧生成Github链接
     searchMaxSuggestions: 10, // 搜索结果显示最大数
     lastUpdated: '上次更新', // 开启更新时间，并配置前缀文字   string | boolean (取值为git提交时间)
     docsDir: 'docs', // 编辑的文件夹
@@ -172,9 +173,9 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
 
     // 博主信息 (显示在首页侧边栏)
     blogger: {
-      avatar: 'https://jsd.cdn.zzko.cn/gh/xugaoyi/image_store/blog/20200103123203.jpg',
-      name: 'Evan Xu',
-      slogan: '前端界的小学生',
+      avatar: 'https://jsd.cdn.zzko.cn/gh/Abner1zhou/img_static/v2-65e772db22cac4a8d3bcf6c78be8e3ad_r.jpg',
+      name: 'Shicong Zhou',
+      slogan: 'ISTJ的IT男',
     },
 
     // 社交图标 (显示于博主信息栏和页脚栏。内置图标：https://doc.xugaoyi.com/pages/a20ce8/#social)
@@ -184,33 +185,33 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
         {
           iconClass: 'icon-youjian',
           title: '发邮件',
-          link: 'mailto:894072666@qq.com',
+          link: 'mailto:11914784@qq.com',
         },
         {
           iconClass: 'icon-github',
           title: 'GitHub',
-          link: 'https://github.com/xugaoyi',
+          link: 'https://github.com/Abner1zhou',
         },
         {
           iconClass: 'icon-erji',
           title: '听音乐',
-          link: 'https://music.163.com/#/playlist?id=755597173',
+          link: 'https://music.163.com/',
         },
       ],
     },
 
     // 页脚信息
     footer: {
-      createYear: 2019, // 博客创建年份
+      createYear: 2024, // 博客创建年份
       copyrightInfo:
-        'Evan Xu | <a href="https://github.com/xugaoyi/vuepress-theme-vdoing/blob/master/LICENSE" target="_blank">MIT License</a>', // 博客版权信息、备案信息等，支持a标签或换行标签</br>
+        'Shicong Zhou | <a href="https://github.com/Abner1zhou/vuepress-theme-vdoing/blob/master/LICENSE" target="_blank">MIT License</a>', // 博客版权信息、备案信息等，支持a标签或换行标签</br>
     },
 
     // 扩展自动生成frontmatter。（当md文件的frontmatter不存在相应的字段时将自动添加。不会覆盖已有的数据。）
     extendFrontmatter: {
       author: {
-        name: 'xugaoyi',
-        link: 'https://github.com/xugaoyi'
+        name: 'Shicong Zhou',
+        link: 'https://github.com/Abner1zhou'
       }
     },
 
@@ -225,7 +226,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       'meta',
       {
         name: 'keywords',
-        content: '前端博客,个人技术博客,前端,前端开发,前端框架,web前端,前端面试题,技术文档,学习,面试,JavaScript,js,ES6,TypeScript,vue,python,css3,html5,Node,git,github,markdown',
+        content: '个人技术博客,运维,开发,AI,操作系统,数据库,技术文档,学习',
       },
     ],
     ['meta', { name: 'baidu-site-verification', content: '7F55weZDDc' }], // 百度统计的站长验证（你可以去掉）
@@ -302,19 +303,19 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
       },
     ],
 
-    [
-      'demo-block', // demo演示模块 https://github.com/xiguaxigua/vuepress-plugin-demo-block
-      {
-        settings: {
-          // jsLib: ['http://xxx'], // 在线示例(jsfiddle, codepen)中的js依赖
-          // cssLib: ['http://xxx'], // 在线示例中的css依赖
-          // vue: 'https://jsd.cdn.zzko.cn/npm/vue/dist/vue.min.js', // 在线示例中的vue依赖
-          jsfiddle: false, // 是否显示 jsfiddle 链接
-          codepen: true, // 是否显示 codepen 链接
-          horizontal: false, // 是否展示为横向样式
-        },
-      },
-    ],
+    // [
+    //   'demo-block', // demo演示模块 https://github.com/xiguaxigua/vuepress-plugin-demo-block
+    //   {
+    //     settings: {
+    //       // jsLib: ['http://xxx'], // 在线示例(jsfiddle, codepen)中的js依赖
+    //       // cssLib: ['http://xxx'], // 在线示例中的css依赖
+    //       // vue: 'https://jsd.cdn.zzko.cn/npm/vue/dist/vue.min.js', // 在线示例中的vue依赖
+    //       jsfiddle: false, // 是否显示 jsfiddle 链接
+    //       codepen: true, // 是否显示 codepen 链接
+    //       horizontal: false, // 是否展示为横向样式
+    //     },
+    //   },
+    // ],
     [
       'vuepress-plugin-zooming', // 放大图片
       {
