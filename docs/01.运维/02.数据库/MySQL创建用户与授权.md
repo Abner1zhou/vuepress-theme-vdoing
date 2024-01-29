@@ -1,0 +1,53 @@
+---
+title: MySQL创建用户与授权
+date: '2023-11-15 16:53:13'
+meta:
+  - name: keywords
+    content: MySQL
+tags:
+  - MySQL
+categories:
+  - 数据库
+permalink: /post/mysql-creates-users-and-authorization-z1b6rwl.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# MySQL创建用户与授权
+
+> Mariadb 命令相同
+
+## 创建用户
+
+```sql
+CREATE USER 'username'@'host' IDENTIFIED BY 'password';
+```
+
+host可以用%表示所有主机
+
+## 授权
+
+```sql
+GRANT privileges ON databasename.tablename TO 'username'@'host'
+```
+
+<span style="font-weight: bold;" data-type="strong">privileges</span>：用户的操作权限，如ALL, SELECT，INSERT，UPDATE等，如果要授予所的权限则使用ALL
+<span style="font-weight: bold;" data-type="strong">databasename</span>：数据库名
+<span style="font-weight: bold;" data-type="strong">tablename</span>：表名，如果要授予该用户对所有数据库和表的相应操作权限则可用*表示，如*.*
+
+## 更改密码
+
+```sql
+SET PASSWORD FOR 'username'@'host' = PASSWORD('newpassword');
+```
+
+## 撤销授权
+
+```sql
+REVOKE privilege ON databasename.tablename FROM 'username'@'host';
+```
