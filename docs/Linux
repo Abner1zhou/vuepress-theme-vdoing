@@ -1,0 +1,72 @@
+---
+title: Linux firewalld
+date: '2023-12-12 18:14:13'
+meta:
+  - name: keywords
+    content: Area/Linux
+tags:
+  - Area/Linux
+permalink: /post/linux-firewalld-z1wsquh.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# Linux firewalld
+
+## 开启一个端口
+
+```shell
+# 添加
+
+firewall-cmd --zone=public --add-port=80/tcp --permanent    （--permanent永久生效，没有此参数重启后失效）
+
+# 重新载入
+
+firewall-cmd --reload
+
+# 查看
+
+firewall-cmd --zone= public --query-port=80/tcp
+
+# 删除
+
+firewall-cmd --zone= public --remove-port=80/tcp --permanent
+```
+
+## 添加规则
+
+```
+ # 接下来我们来看富规则的设置，即rich rules
+ # 允许192.168.2.208主机的所有流量
+ firewall-cmd --zone=drop --add-rich-rule="rule family="ipv4" source address="192.168.2.208" accept"
+ # 允许192.168.2.208主机的icmp协议，即允许192.168.2.208主机ping
+ firewall-cmd --add-rich-rule="rule family="ipv4" source address="192.168.2.208" protocol value="icmp" accept"
+ # 取消允许192.168.2.208主机的所有流量
+ firewall-cmd --zone=drop --remove-rich-rule="rule family="ipv4" source address="192.168.2.208" accept"
+ # 允许192.168.2.208主机访问ssh服务
+ firewall-cmd --zone=drop --add-rich-rule="rule family="ipv4" source address="192.168.2.208" service name="ssh" accept"
+ # 禁止192.168.2.208访问https服务，并返回错误信息
+ firewall-cmd --zone=drop --add-rich-rule="rule family="ipv4" source address="192.168.2.208" service name="https" reject"
+ # 注：如果是drop的话是直接丢弃，会返回timeout（连接超时）
+ # 允许192.168.2.0/24网段的主机访问22端口
+ firewall-cmd --zone=drop --add-rich-rule="rule family="ipv4" source address="192.168.2.0/24" port protocol="tcp" port="22" accept"
+ # 每分钟允许2个新连接访问ftp服务
+ firewall-cmd --add-rich-rule="rule service name=ftp limit value=2/m accept"
+ # 允许新的ipv4和ipv6连接ftp，并使用日志和审核，每分钟允许访问一次
+ firewall-cmd --add-rich-rule="rule service name=ftp log limit value="1/m" audit accept"
+ # 拒绝来自192.168.2.0/24网段的连接，10秒后自动取消
+ firewall-cmd --add-rich-rule="rule family=ipv4 source address=192.168.2.0/24 reject" --timeout=10
+ # 允许ipv6地址为2001:db8::/64子网的主机访问dns服务，并且每小时审核一次，300秒后自动取消
+ firewall-cmd --add-rich-rule="rule family=ipv6 source address="2001:db8::/64" service name="dns" audit limit value="1/h" reject" --timeout=300
+ # 将来自192.168.2.0/24网段访问本机80端口的流量转发到本机的22端口
+ firewall-cmd --zone=drop --add-rich-rule="rule family=ipv4 source address=192.168.2.0/24 forward-port port=80 protocol=tcp to-port=22"
+ # 将来自192.168.2.0/24网段访问本地80端口的流量转发到192.168.2.208主机的22端口
+ firewall-cmd --zone=drop --add-rich-rule="rule family=ipv4 source address=192.168.2.0/24 
+```
+
+‍
