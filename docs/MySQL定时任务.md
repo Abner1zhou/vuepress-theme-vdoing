@@ -1,0 +1,172 @@
+---
+title: MySQL定时任务
+date: '2023-12-15 15:09:25'
+meta:
+  - name: keywords
+    content: MySQL
+tags:
+  - MySQL
+categories:
+  - 运维
+  - 数据库
+permalink: /post/mysql-timing-task-z1iqxty.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# MySQL定时任务
+
+创建一个定制任务，
+
+```sql
+DELIMITER //
+
+CREATE EVENT IF NOT EXISTS daily_copy_event
+ON SCHEDULE EVERY 1 DAY
+STARTS TIMESTAMP(CURDATE() + INTERVAL 2 HOUR + INTERVAL 15 MINUTE)
+DO
+BEGIN
+    CALL CopyDataFromConnectorToJixiao();  -- 指定要执行的存储过程
+END //
+
+DELIMITER ;
+
+```
+
+<span style="font-weight: bold;" data-type="strong">上述脚本中的执行计划说明</span>  
+1） SCHEDULE EVERY 1 DAY 比较好理解，就是每天执行一次  
+2）开始执行时间我们可以先看一下TIMESTAMP(CURDATE() + INTERVAL 2 HOUR + INTERVAL 15 MINUTE)的值是每天的凌晨2点15分。
+
+‍
+
+# 创新存储过程
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE CopyDataFromConnectorToJixiao()
+BEGIN
+    -- Copy data for bs_department
+    TRUNCATE jixiao.bs_department;
+    INSERT INTO jixiao.bs_department
+    SELECT * FROM d_connector.bs_department;
+
+    -- Copy data for bs_record_info
+    TRUNCATE jixiao.bs_record_info;
+    INSERT INTO jixiao.bs_record_info
+    SELECT * FROM d_connector.bs_record_info;
+
+    -- Copy data for bs_salary
+    TRUNCATE jixiao.bs_salary;
+    INSERT INTO jixiao.bs_salary
+    SELECT
+        id,
+        user_id,
+        CREATED_TIME,
+        UPDATED_TIME,
+        SalaryAmount2 / (user_id>>16) as SalaryAmount2,
+        Status,
+        EffectiveDate,
+        ExpiredDate
+    FROM
+        d_connector.bs_salary;
+
+    -- Copy data for bs_userinfo
+    TRUNCATE jixiao.bs_userinfo;
+    INSERT INTO jixiao.bs_userinfo
+    SELECT
+        d1.userID,
+        d1.name,
+        d1.gender,
+        d1.email,
+        d1.mobilePhone,
+        d2.user_id
+    FROM
+        d_connector.bs_userinfo d1
+    LEFT JOIN (
+        SELECT
+            user_id,
+            mobile,
+            CREATED_TIME,
+            name,
+            @row_number := IF(@prev_mobile = mobile, @row_number + 1, 1) AS RowNum,
+            @prev_mobile := mobile
+        FROM (
+            SELECT
+                user_id,
+                mobile,
+                name,
+                CREATED_TIME
+            FROM
+                d_connector.dd_userinfo
+            WHERE
+                active = 1
+                and user_id NOT LIKE '%-2'
+            ORDER BY
+                mobile, CREATED_TIME DESC
+        ) ranked
+    ) d2 ON (d1.mobilePhone = d2.mobile or (d1.mobilePhone != d2.mobile and d1.name = d2.name)) AND d2.RowNum = 1;
+
+    -- Copy data for bs_vacation
+    TRUNCATE jixiao.bs_vacation;
+    INSERT INTO jixiao.bs_vacation
+    SELECT * FROM d_connector.bs_vacation;
+END //
+
+DELIMITER ;
+
+```
+
+‍
+
+# 如果事件不执行
+
+上述指令正确创建，但是还是不执行。需要检查1. `event_scheduler `​是否开启；2. 事件是否为ENABLE
+
+## 1.检查`event_scheduler `​是否开启
+
+​`show variables like 'event_scheduler';`​ 说明event事件没有开启。
+
+```sql
+mysql> show variables like 'event_scheduler';
++-----------------+-------+
+| Variable_name   | Value |
++-----------------+-------+
+| event_scheduler | OFF   |
++-----------------+-------+
+```
+
+* 临时开启 `event`​ 事件：`set global event_scheduler=1;`​
+
+*执行完以上命令，再次查看event状态，可以看到event_scheduler的值变成ON，此时event的状态为“开启”；*
+
+<span style="font-weight: bold;" data-type="strong">注意：此方法只是临时开启event状态，当MySQL重新启动时，event状态会改变回原来的“OFF”，即“关闭状态”；</span>
+
+* 永久开启 `event`​ 事件：修改MySQL配置文件
+
+​*`windows`*​ *系统的 MySQL的配置文件名是* *`my.ini`*​  *；*​*`Linux`*​*系统的 MySQL 的配置文件名是* *`my.cnf`*​ *；*
+
+*打开配置文件在*  *`[mysqld]`* ​ *模块下添加* *`event_scheduler=on`*​ *或* *`event_scheduler=1`*​ *；*
+
+*重新启动MySQL。*
+
+‍
+
+## 检查事件是否为ENABLE
+
+通过`select * from information_schema.EVENTS;`​命令查看status是否为`DISABLE`​。如果是的话，把时间修改为ENABLE就可以。
+
+!注意`user_event`​改为具体的事件名
+
+```sql
+alter event user_event on completion preserve enable; -- 开启定时任务
+alter event user_event on completion preserve disable; -- 关闭定时任务
+
+```
+
+‍
