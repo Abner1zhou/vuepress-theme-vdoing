@@ -1,0 +1,35 @@
+---
+title: Ubuntu防火墙 ufw管理
+date: '2023-11-16 13:40:58'
+meta:
+  - name: keywords
+    content: Area/运维 Area/Linux
+tags:
+  - Area/运维
+  - Area/Linux
+permalink: /post/ubuntu-firewall-ufw-management-zfb9v.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# Ubuntu防火墙 ufw管理
+
+## 添加规则
+
+```bash
+ufw allow from 192.168.29.36 to any port 80 proto tcp
+```
+
+## 删除规则
+
+```bash
+sudo ufw status numbered  # 查看已有规则
+sudo ufw delete num  # 根据编号来删除规则
+```
+
+‍
