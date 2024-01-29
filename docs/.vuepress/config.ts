@@ -35,47 +35,22 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
         items: [
           // 说明：以下所有link的值只是在相应md文件头部定义的永久链接（不是什么特殊编码）。另外，注意结尾是有斜杠的
           {
-            text: '操作系统',
-            items: [
-              { text: 'JavaScript', link: '/pages/8143cc480faf9a11/' },
-            ],
+            text: '操作系统'
           },
           {
             text: '数据库',
-            items: [
-              { text: '《JavaScript教程》', link: '/note/javascript/' },
-              { text: '《JavaScript高级程序设计》', link: '/note/js/' },
-              { text: '《ES6 教程》', link: '/note/es6/' },
-              { text: '《Vue》', link: '/note/vue/' },
-              { text: '《React》', link: '/note/react/' },
-              {
-                text: '《TypeScript 从零实现 axios》',
-                link: '/note/typescript-axios/',
-              },
-              {
-                text: '《Git》',
-                link: '/note/git/',
-              },
-              {
-                text: 'TypeScript',
-                link: '/pages/51afd6/',
-              },
-              {
-                text: 'JS设计模式总结',
-                link: '/pages/4643cd/',
-              },
-            ],
+            link: '/post/mysql-timing-task-z1iqxty',
           },
-          { text: '其他运维笔记', link: '/pages/8309a5b876fc95e3/' },
+          { text: '其他运维笔记'},
         ],
       },
       {
         text: '开发',
         link: '/developer/',
         items: [
-          { text: 'Python', link: '/pages/8309a5b876fc95e3/' },
-          { text: 'Java', link: '/pages/0a83b083bdf257cb/' },
-          { text: '其他开发笔记', link: '/pages/8309a5b876fc95e3/' },
+          { text: 'Python', link: '/' },
+          { text: 'Java', link: '/' },
+          { text: '其他开发笔记', link: '/' },
         ],
       },
       {
@@ -202,7 +177,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
 
     // 页脚信息
     footer: {
-      createYear: 2024, // 博客创建年份
+      createYear: 2023, // 博客创建年份
       copyrightInfo:
         'Shicong Zhou | <a href="https://github.com/Abner1zhou/vuepress-theme-vdoing/blob/master/LICENSE" target="_blank">MIT License</a>', // 博客版权信息、备案信息等，支持a标签或换行标签</br>
     },
