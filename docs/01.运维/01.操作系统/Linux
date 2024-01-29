@@ -1,0 +1,54 @@
+---
+title: Linux find命令
+date: '2023-11-09 09:45:13'
+meta:
+  - name: keywords
+    content: Linux
+tags:
+  - Linux
+categories:
+  - 运维
+  - 操作系统
+permalink: /post/linux-find-command-zxwhfs.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# Linux find命令
+
+## 在Linux中，批量删除特定模式的文件、文件夹
+
+### 背景：
+
+要删除群晖Photo自动创建的`.@__thumb`​目录，每个相册文件夹下面都有一个这个缩略图目录
+
+### 实现方式
+
+在Linux中，批量删除特定模式的文件夹可以使用 `find`​ 命令搭配 `rm`​ 或 `rmdir`​ 命令来实现。以下是一个命令示例，它会在指定目录下递归地查找所有名为 `.@__thumb`​ 的隐藏文件夹，并将其删除：
+
+```sh
+find /path/to/your/directory -type d -name '.@__thumb' -exec rm -rf {} +
+```
+
+请将 `/path/to/your/directory`​ 替换成您服务器上的实际路径。这个命令的组成部分解释如下：
+
+* ​`find`​: 这是用来查找文件和目录的命令。
+* ​`/path/to/your/directory`​: 你想要开始搜索的目录路径。
+* ​`-type d`​: 这个选项意味着只搜索目录。
+* ​`-name '.@__thumb'`​: 指定要搜索的目录名称。
+* ​`-exec`​: 对搜索结果执行后面的命令。
+* ​`rm -rf {}`​: 删除搜索到的目录。`{}`​ 是一个占位符，代表 `find`​ 命令找到的每个文件夹的路径。
+* ​`+`​: 这个符号告诉 `find`​ 命令将所有找到的文件夹作为参数传递给 `rm`​ 命令，这样可以更高效地一次性删除所有文件夹。
+
+在执行这个命令之前，请确保您对其进行了测试，并且清楚地了解它的作用，因为 `rm -rf`​ 是一个非常危险的命令，一旦执行，被删除的文件和目录将无法恢复。为了安全起见，您可以首先执行不带 `-exec rm -rf {} +`​ 的命令来查看哪些文件夹会被找到：
+
+```sh
+find /path/to/your/directory -type d -name '.@__thumb'
+```
+
+这将列出所有将被删除的目录，不会执行删除操作。如果输出看起来正确，再执行带有删除选项的命令。
