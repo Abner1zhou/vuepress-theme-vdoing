@@ -1,0 +1,87 @@
+---
+title: Ubuntu NFS服务无法启动
+date: '2024-02-22 11:01:13'
+meta:
+  - name: keywords
+    content: Area/Linux
+tags:
+  - Area/Linux
+permalink: /post/ubuntu-nfs-service-cannot-start-z1wkgsq.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# Ubuntu NFS服务无法启动
+
+尝试启动 `nfs-kernel-server`​ 服务时失败，具体报错信息显示 `nfs-server.service`​ 的任务被取消。
+
+```lua
+ubuntu@ubuntu-nfs:~$ sudo /etc/init.d/nfs-kernel-server start
+[....] Starting nfs-kernel-server (via systemctl): nfs-kernel-server.serviceJob for nfs-server.service canceled.
+ failed!
+```
+
+<span style="font-weight: bold;" data-type="strong">检查</span> `<span style="font-weight: bold;" data-type="strong">nfs-kernel-server</span>` <span style="font-weight: bold;" data-type="strong">服务的状态</span>
+
+以获取更详细的错误信息。可以使用以下命令：
+
+```lua
+sudo systemctl status nfs-kernel-server
+```
+
+​![image](`https://jsd.cdn.zzko.cn/gh/Abner1zhou/img_static/202402221413758.png)​
+
+根据日志信息，`nfs-server.service`​ 启动失败的原因是 `rpc.nfsd`​ 进程无法成功写入内核，报错“Connection refused”（连接被拒绝），并且无法为 `nfsd`​ 设置任何套接字。这通常指示底层网络服务或依赖服务（如 `rpcbind`​ 或 `portmap`​）没有正确启动或配置，导致 `nfsd`​ 无法正常通信。
+
+‍
+
+<span style="font-weight: bold;" data-type="strong">检查并启动</span> <span style="font-weight: bold;" data-type="strong">`rpcbind`</span>​ <span style="font-weight: bold;" data-type="strong">服务</span>：
+
+ `nfs-server`​ 依赖于 `rpcbind`​ 服务，确保 `rpcbind`​ 服务正在运行。可以使用以下命令来检查并启动 `rpcbind`​ 服务：
+
+```lua
+ubuntu@ubuntu-nfs:~$ sudo systemctl status rpcbind
+● rpcbind.service
+   Loaded: masked (/dev/null; bad)
+   Active: inactive (dead)
+ubuntu@ubuntu-nfs:~$ sudo systemctl start rpcbind
+Failed to start rpcbind.service: Unit rpcbind.service is masked.
+```
+
+unmask`rpcbind`​ 服务，并启动
+
+```lua
+ubuntu@ubuntu-nfs:~$ sudo systemctl unmask rpcbind
+Removed /etc/systemd/system/rpcbind.service.
+ubuntu@ubuntu-nfs:~$ sudo systemctl start rpcbind
+ubuntu@ubuntu-nfs:~$ sudo systemctl status rpcbind
+● rpcbind.service - RPC bind portmap service
+   Loaded: loaded (/lib/systemd/system/rpcbind.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2024-02-22 01:49:48 UTC; 2s ago
+     Docs: man:rpcbind(8)
+ Main PID: 27265 (rpcbind)
+    Tasks: 1 (limit: 4915)
+   CGroup: /system.slice/rpcbind.service
+           └─27265 /sbin/rpcbind -f -w
+```
+
+‍
+
+再次尝试启动`nfs-server`​，成功启动。
+
+‍
+
+‍
+
+<span style="font-weight: bold;" data-type="strong">重新导出NFS共享</span>：在对NFS配置进行任何更改后，应重新导出共享。可以使用命令：
+
+```lua
+sudo exportfs -ra
+```
+
+‍
