@@ -1,0 +1,107 @@
+---
+title: Apache NiFi2.0 安装
+date: '2024-02-18 16:09:45'
+meta:
+  - name: keywords
+    content: Area/数据 Area/Linux
+tags:
+  - Area/数据
+  - Area/Linux
+categories:
+  - 技术
+permalink: /post/apache-nifi2.0-an-zhuang-z1hwovo.html
+author:
+  name: Zhou
+  link: https://github.com/Abner1zhou
+---
+
+
+<!-- more -->
+
+
+# Apache NiFi2.0 安装
+
+# 下载
+
+[Download - Apache NiFi](https://nifi.apache.org/download/)
+
+本教材下载的是`NiFi 2.0.0-M2`​版本，<span style="font-weight: bold;" data-type="strong">需要安装jdk21配合使用</span>
+
+# 设置环境变量
+
+为了不影响服务器上面其他程序的运行，不直接修改系统环境变量，采用nifi自带的环境变量配置文件。
+
+修改`bin/nifi-env.sh`​ 设置`export JAVA_HOME=/opt/jdk-21.0.2/`​
+
+​![image](`https://jsd.cdn.zzko.cn/gh/Abner1zhou/img_static/202402221533222.png)​
+
+# 自签名证书
+
+nifi默认的证书只能本机访问，访问web会报错 400 SNI错误。
+
+1. 我们将conf目录下的.p12文件删除，重新创建证书
+
+```shell
+rm -rf *.p12
+```
+
+2. 在 conf 目录下创建证书
+
+    <span style="font-weight: bold;" data-type="strong">注意：要在第二行命令的Common Name输入服务器域名或者IP</span>
+
+    ```shell
+    # 生成RSA私钥（无密码，生产环境中应设置一个）
+    openssl genpkey -algorithm RSA -out nifi.key
+
+    # 创建自签名证书请求（填写相关信息，如Common Name应为您的服务器IP地址）
+    openssl req -new -key nifi.key -out nifi.csr
+
+    # 使用私钥和CSR生成自签名证书，有效期可以自行调整（此处设置3650天）
+    openssl x509 -req -days 3650 -in nifi.csr -signkey nifi.key -out nifi.crt
+    # 将私钥和证书合并到一个PKCS12文件中，并设置一个密码（例如：abcdef123456）
+    openssl pkcs12 -export -in nifi.crt -inkey nifi.key -out nifi.p12 -name nifi -password pass:abcdef123456
+
+    ```
+3. 修改 nifi.properties 文件
+
+    * 配置服务器地址和端口
+    * 配置证书路径和密码  
+      ​![image](`https://jsd.cdn.zzko.cn/gh/Abner1zhou/img_static/202402221533956.png)​
+
+# 创建用户
+
+```bash
+./nifi.sh set-single-user-credentials admin abcdef123456
+```
+
+# 启动服务
+
+```bash
+./nifi.sh start
+```
+
+# 开放访问端口
+
+如果服务器开启了防火墙，需要将nifi.properties 中配置的访问端口放开。
+
+```bash
+# 查看已开放的所有端口
+
+firewall-cmd --list-ports
+
+# 开放8443
+
+firewall-cmd --permanent --zone=public --add-port=8443/tcp
+
+# 重新加载防火墙规则，使更改生效
+
+firewall-cmd --reload
+```
+
+# 客户端Web访问
+
+访问地址：https://10.0.110.33:8443/nifi
+
+​![image](`https://jsd.cdn.zzko.cn/gh/Abner1zhou/img_static/202402221533839.png)​
+
+‍
