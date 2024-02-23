@@ -35,7 +35,8 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
         items: [
           // 说明：以下所有link的值只是在相应md文件头部定义的永久链接（不是什么特殊编码）。另外，注意结尾是有斜杠的
           {
-            text: '操作系统'
+            text: '操作系统',
+            link: '/post/linux-firewalld-z1wsquh.html'
           },
           {
             text: '数据库',
@@ -59,6 +60,7 @@ export default defineConfig4CustomTheme<VdoingThemeConfig>({
         items: [
           { text: '技术文档', link: '/pages/9a7ee40fc232253e/' },
           { text: 'GitHub技巧', link: '/pages/4c778760be26d8b3/' },
+          { text: 'Apache NiFi', link: '/post/apache-nifi2.0-an-zhuang-z1hwovo.html' },
           { text: '博客搭建', link: '/pages/41f87d890d0a02af/' },
         ],
       },
