@@ -1,7 +1,7 @@
 ---
 home: true
 # heroImage: /img/web.png
-heroText: 山猪的博客
+heroText: 山猪的博客-贪吃狗咖喱
 tagline: 技术博客，功不唐捐。
 # actionText: 立刻进入 →
 # actionLink: /technology/
